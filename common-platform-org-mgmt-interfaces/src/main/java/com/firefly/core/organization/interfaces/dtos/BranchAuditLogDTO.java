@@ -18,7 +18,7 @@
 package com.firefly.core.organization.interfaces.dtos;
 
 import com.firefly.core.organization.interfaces.enums.AuditAction;
-import com.firefly.core.utils.annotations.FilterableId;
+import org.fireflyframework.utils.annotations.FilterableId;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
