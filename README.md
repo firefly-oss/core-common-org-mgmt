@@ -327,15 +327,15 @@ The Organization Management Microservice provides a comprehensive REST API for m
 - `POST /api/v1/positions/filter` - Filter positions with pagination
 
 #### Calendar Management
-- `POST /api/v1/calendars` - Create a new calendar
-- `GET /api/v1/calendars/{calendarId}` - Get a calendar by ID
-- `PUT /api/v1/calendars/{calendarId}` - Update a calendar
-- `DELETE /api/v1/calendars/{calendarId}` - Delete a calendar
-- `POST /api/v1/calendars/filter` - Filter calendars with pagination
-- `POST /api/v1/calendars/assignments` - Create a calendar assignment
-- `GET /api/v1/calendars/assignments/{assignmentId}` - Get a calendar assignment by ID
-- `PUT /api/v1/calendars/assignments/{assignmentId}` - Update a calendar assignment
-- `DELETE /api/v1/calendars/assignments/{assignmentId}` - Delete a calendar assignment
+- `POST /api/v1/banks/{bankId}/calendars` - Create a new calendar for a bank
+- `GET /api/v1/banks/{bankId}/calendars/{calendarId}` - Get a calendar by ID
+- `PUT /api/v1/banks/{bankId}/calendars/{calendarId}` - Update a calendar
+- `DELETE /api/v1/banks/{bankId}/calendars/{calendarId}` - Delete a calendar
+- `POST /api/v1/banks/{bankId}/calendars/filter` - Filter calendars with pagination
+- `POST /api/v1/banks/{bankId}/calendars/{calendarId}/assignments` - Create a calendar assignment
+- `GET /api/v1/banks/{bankId}/calendars/{calendarId}/assignments/{assignmentId}` - Get a calendar assignment by ID
+- `PUT /api/v1/banks/{bankId}/calendars/{calendarId}/assignments/{assignmentId}` - Update a calendar assignment
+- `DELETE /api/v1/banks/{bankId}/calendars/{calendarId}/assignments/{assignmentId}` - Delete a calendar assignment
 
 #### Holiday Management
 - `POST /api/v1/holidays` - Create a new holiday
@@ -587,10 +587,9 @@ curl -X POST http://localhost:8080/api/v1/branches \
 Set the operating hours for the branch:
 
 ```bash
-curl -X POST http://localhost:8080/api/v1/branches/hours \
+curl -X POST http://localhost:8080/api/v1/branches/223e4567-e89b-12d3-a456-426614174000/hours \
   -H "Content-Type: application/json" \
   -d '{
-    "branchId": "223e4567-e89b-12d3-a456-426614174000",
     "dayOfWeek": "MONDAY",
     "openTime": "09:00:00",
     "closeTime": "17:00:00",
@@ -675,10 +674,9 @@ curl -X POST http://localhost:8080/api/v1/positions \
 Create a working calendar for the bank:
 
 ```bash
-curl -X POST http://localhost:8080/api/v1/calendars \
+curl -X POST http://localhost:8080/api/v1/banks/123e4567-e89b-12d3-a456-426614174000/calendars \
   -H "Content-Type: application/json" \
   -d '{
-    "bankId": "123e4567-e89b-12d3-a456-426614174000",
     "name": "Standard Working Calendar",
     "description": "Default working calendar for all branches",
     "isDefault": true,
@@ -705,10 +703,9 @@ curl -X POST http://localhost:8080/api/v1/calendars \
 Assign the working calendar to a branch:
 
 ```bash
-curl -X POST http://localhost:8080/api/v1/calendars/assignments \
+curl -X POST http://localhost:8080/api/v1/banks/123e4567-e89b-12d3-a456-426614174000/calendars/b23e4567-e89b-12d3-a456-426614174000/assignments \
   -H "Content-Type: application/json" \
   -d '{
-    "calendarId": "b23e4567-e89b-12d3-a456-426614174000",
     "branchId": "223e4567-e89b-12d3-a456-426614174000",
     "effectiveFrom": "2023-01-01T00:00:00",
     "isActive": true
