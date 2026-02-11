@@ -1,6 +1,6 @@
 spring:
   application:
-    name: common-platform-org-mgmt
+    name: core-common-org-mgmt
     version: 1.0.0
     description: Organization Management Core Application
     team:

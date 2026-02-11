@@ -56,12 +56,12 @@ The Organization Management Microservice follows a modular architecture with cle
 ## Project Structure
 The project is organized into multiple Maven modules:
 
-- **common-platform-org-mgmt**: Parent module
-- **common-platform-org-mgmt-core**: Business logic implementation
-- **common-platform-org-mgmt-interfaces**: API contracts and DTOs
-- **common-platform-org-mgmt-models**: Entity definitions and repositories
-- **common-platform-org-mgmt-sdk**: Client SDK for other services
-- **common-platform-org-mgmt-web**: REST controllers and application entry point
+- **core-common-org-mgmt**: Parent module
+- **core-common-org-mgmt-core**: Business logic implementation
+- **core-common-org-mgmt-interfaces**: API contracts and DTOs
+- **core-common-org-mgmt-models**: Entity definitions and repositories
+- **core-common-org-mgmt-sdk**: Client SDK for other services
+- **core-common-org-mgmt-web**: REST controllers and application entry point
 
 ## Entity Relationship Diagram
 Below is a comprehensive entity relationship diagram showing all entities and their relationships in the Organization Management Microservice:
@@ -354,8 +354,8 @@ The Organization Management Microservice provides a comprehensive REST API for m
 ### Building the Project
 ```bash
 # Clone the repository
-git clone https://github.com/firefly/common-platform-org-mgmt.git
-cd common-platform-org-mgmt
+git clone https://github.com/firefly/core-common-org-mgmt.git
+cd core-common-org-mgmt
 
 # Build the project
 mvn clean install
@@ -372,7 +372,7 @@ export DB_PASSWORD=postgres
 export DB_SSL_MODE=disable
 
 # Run the application
-java -jar common-platform-org-mgmt-web/target/common-platform-org-mgmt-web-1.0.0-SNAPSHOT.jar
+java -jar core-common-org-mgmt-web/target/core-common-org-mgmt-web-1.0.0-SNAPSHOT.jar
 ```
 
 ## Configuration

@@ -11,14 +11,14 @@
     </parent>
 
     <groupId>com.firefly</groupId>
-    <artifactId>common-platform-org-mgmt</artifactId>
+    <artifactId>core-common-org-mgmt</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>common-platform-org-mgmt-core</module>
-        <module>common-platform-org-mgmt-interfaces</module>
-        <module>common-platform-org-mgmt-models</module>
-        <module>common-platform-org-mgmt-sdk</module>
-        <module>common-platform-org-mgmt-web</module>
+        <module>core-common-org-mgmt-core</module>
+        <module>core-common-org-mgmt-interfaces</module>
+        <module>core-common-org-mgmt-models</module>
+        <module>core-common-org-mgmt-sdk</module>
+        <module>core-common-org-mgmt-web</module>
     </modules>
 
     <properties>
@@ -27,9 +27,9 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <fireflyframework.bom.version>26.01.01</fireflyframework.bom.version>
-        <common-platform-org-mgmt.version>
+        <core-common-org-mgmt.version>
             1.0.0-SNAPSHOT
-        </common-platform-org-mgmt.version>
+        </core-common-org-mgmt.version>
     </properties>
 
     <dependencyManagement>
@@ -44,27 +44,27 @@
             <!-- Internal modules -->
             <dependency>
                 <groupId>com.firefly</groupId>
-                <artifactId>common-platform-org-mgmt-interfaces</artifactId>
+                <artifactId>core-common-org-mgmt-interfaces</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.firefly</groupId>
-                <artifactId>common-platform-org-mgmt-models</artifactId>
+                <artifactId>core-common-org-mgmt-models</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.firefly</groupId>
-                <artifactId>common-platform-org-mgmt-core</artifactId>
+                <artifactId>core-common-org-mgmt-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.firefly</groupId>
-                <artifactId>common-platform-org-mgmt-web</artifactId>
+                <artifactId>core-common-org-mgmt-web</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.firefly</groupId>
-                <artifactId>common-platform-org-mgmt-sdk</artifactId>
+                <artifactId>core-common-org-mgmt-sdk</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

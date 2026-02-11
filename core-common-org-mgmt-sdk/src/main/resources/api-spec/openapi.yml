@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: common-platform-org-mgmt
+  title: core-common-org-mgmt
   description: Organization Management Core Application
   contact:
     name: Firefly Software Solutions Inc
