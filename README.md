@@ -367,7 +367,7 @@ The Organization Management Microservice provides a comprehensive REST API for m
 ### Building the Project
 ```bash
 # Clone the repository
-git clone https://github.com/firefly/core-common-org-mgmt.git
+git clone https://github.com/firefly-oss/core-common-org-mgmt.git
 cd core-common-org-mgmt
 
 # Build the project
