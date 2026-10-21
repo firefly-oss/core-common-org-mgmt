@@ -2808,8 +2808,10 @@ components:
           - SUNDAY
         openTime:
           type: string
+          format: time-local
         closeTime:
           type: string
+          format: time-local
         isClosed:
           type: boolean
         createdAt:
