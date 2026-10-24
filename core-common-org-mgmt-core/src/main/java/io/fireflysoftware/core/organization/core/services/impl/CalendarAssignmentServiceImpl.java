@@ -15,8 +15,13 @@
  */
 
 
-package io.fireflysoftware.core.organization.core.services;
+package io.fireflysoftware.core.organization.core.services.impl;
 
+import io.fireflysoftware.core.organization.core.services.WorkingCalendarService;
+import io.fireflysoftware.core.organization.core.services.BankService;
+import io.fireflysoftware.core.organization.core.services.CalendarAssignmentService;
+
+import io.fireflysoftware.core.organization.core.services.ScopedFilterSupport;
 import org.fireflyframework.core.filters.FilterRequest;
 import org.fireflyframework.core.filters.FilterUtils;
 import org.fireflyframework.core.queries.PaginationResponse;
@@ -58,12 +63,10 @@ public class CalendarAssignmentServiceImpl implements CalendarAssignmentService 
 
     @Override
     public Mono<PaginationResponse<CalendarAssignmentDTO>> filterCalendarAssignmentsForCalendar(UUID bankId, UUID calendarId, FilterRequest<CalendarAssignmentDTO> filterRequest) {
-        return bankService.getBankById(bankId)
-                .switchIfEmpty(Mono.error(new RuntimeException("Bank not found with ID: " + bankId)))
-                .flatMap(bank -> workingCalendarService.getWorkingCalendarById(calendarId))
-                .filter(calendar -> calendar.getBankId().equals(bankId))
-                .switchIfEmpty(Mono.error(new RuntimeException("Calendar not found for bank with ID: " + bankId)))
-                .flatMap(calendar -> filterCalendarAssignments(filterRequest));
+        return workingCalendarService.getWorkingCalendarByIdForBank(bankId, calendarId)
+                .flatMap(calendar -> ScopedFilterSupport.filter(CalendarAssignment.class, mapper::toDTO, filterRequest,
+                        (criteria, pageable) -> repository.findPageForCalendar(calendarId, criteria, pageable),
+                        criteria -> repository.countForCalendar(calendarId, criteria)));
     }
 
     @Override

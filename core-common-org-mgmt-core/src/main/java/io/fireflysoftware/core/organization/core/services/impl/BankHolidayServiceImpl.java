@@ -15,7 +15,9 @@
  */
 
 
-package io.fireflysoftware.core.organization.core.services;
+package io.fireflysoftware.core.organization.core.services.impl;
+
+import io.fireflysoftware.core.organization.core.services.BankHolidayService;
 
 import org.fireflyframework.core.filters.FilterRequest;
 import org.fireflyframework.core.filters.FilterUtils;

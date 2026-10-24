@@ -15,8 +15,13 @@
  */
 
 
-package io.fireflysoftware.core.organization.core.services;
+package io.fireflysoftware.core.organization.core.services.impl;
 
+import io.fireflysoftware.core.organization.core.services.BranchService;
+import io.fireflysoftware.core.organization.core.services.BranchDepartmentService;
+import io.fireflysoftware.core.organization.core.services.BranchPositionService;
+
+import io.fireflysoftware.core.organization.core.services.ScopedFilterSupport;
 import org.fireflyframework.core.filters.FilterRequest;
 import org.fireflyframework.core.filters.FilterUtils;
 import org.fireflyframework.core.queries.PaginationResponse;
@@ -58,12 +63,10 @@ public class BranchPositionServiceImpl implements BranchPositionService {
 
     @Override
     public Mono<PaginationResponse<BranchPositionDTO>> filterBranchPositionsForDepartment(UUID branchId, UUID departmentId, FilterRequest<BranchPositionDTO> filterRequest) {
-        return branchService.getBranchById(branchId)
-                .switchIfEmpty(Mono.error(new RuntimeException("Branch not found with ID: " + branchId)))
-                .flatMap(branch -> branchDepartmentService.getBranchDepartmentById(departmentId))
-                .filter(department -> department.getBranchId().equals(branchId))
-                .switchIfEmpty(Mono.error(new RuntimeException("Department not found for branch with ID: " + branchId)))
-                .flatMap(department -> filterBranchPositions(filterRequest));
+        return branchDepartmentService.getBranchDepartmentByIdForBranch(branchId, departmentId)
+                .flatMap(department -> ScopedFilterSupport.filter(BranchPosition.class, mapper::toDTO, filterRequest,
+                        (criteria, pageable) -> repository.findPageForDepartment(departmentId, criteria, pageable),
+                        criteria -> repository.countForDepartment(departmentId, criteria)));
     }
 
     @Override

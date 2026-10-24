@@ -15,8 +15,12 @@
  */
 
 
-package io.fireflysoftware.core.organization.core.services;
+package io.fireflysoftware.core.organization.core.services.impl;
 
+import io.fireflysoftware.core.organization.core.services.BankDivisionService;
+import io.fireflysoftware.core.organization.core.services.BankRegionService;
+
+import io.fireflysoftware.core.organization.core.services.ScopedFilterSupport;
 import org.fireflyframework.core.filters.FilterRequest;
 import org.fireflyframework.core.filters.FilterUtils;
 import org.fireflyframework.core.queries.PaginationResponse;
@@ -55,10 +59,10 @@ public class BankRegionServiceImpl implements BankRegionService {
 
     @Override
     public Mono<PaginationResponse<BankRegionDTO>> filterBankRegionsForDivision(UUID bankId, UUID divisionId, FilterRequest<BankRegionDTO> filterRequest) {
-        return bankDivisionService.getBankDivisionById(divisionId)
-                .filter(division -> division.getBankId().equals(bankId))
-                .switchIfEmpty(Mono.error(new RuntimeException("Division not found for bank with ID: " + bankId)))
-                .flatMap(division -> filterBankRegions(filterRequest));
+        return bankDivisionService.getBankDivisionByIdForBank(bankId, divisionId)
+                .flatMap(division -> ScopedFilterSupport.filter(BankRegion.class, mapper::toDTO, filterRequest,
+                        (criteria, pageable) -> repository.findPageForDivision(divisionId, criteria, pageable),
+                        criteria -> repository.countForDivision(divisionId, criteria)));
     }
 
     @Override

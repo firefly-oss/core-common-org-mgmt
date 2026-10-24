@@ -15,8 +15,12 @@
  */
 
 
-package io.fireflysoftware.core.organization.core.services;
+package io.fireflysoftware.core.organization.core.services.impl;
 
+import io.fireflysoftware.core.organization.core.services.BranchService;
+import io.fireflysoftware.core.organization.core.services.BranchHoursService;
+
+import io.fireflysoftware.core.organization.core.services.ScopedFilterSupport;
 import org.fireflyframework.core.filters.FilterRequest;
 import org.fireflyframework.core.filters.FilterUtils;
 import org.fireflyframework.core.queries.PaginationResponse;
@@ -57,7 +61,9 @@ public class BranchHoursServiceImpl implements BranchHoursService {
     public Mono<PaginationResponse<BranchHoursDTO>> filterBranchHoursForBranch(UUID branchId, FilterRequest<BranchHoursDTO> filterRequest) {
         return branchService.getBranchById(branchId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Branch not found with ID: " + branchId)))
-                .flatMap(branch -> filterBranchHours(filterRequest));
+                .flatMap(branch -> ScopedFilterSupport.filter(BranchHours.class, mapper::toDTO, filterRequest,
+                        (criteria, pageable) -> repository.findPageForBranch(branchId, criteria, pageable),
+                        criteria -> repository.countForBranch(branchId, criteria)));
     }
 
     @Override
