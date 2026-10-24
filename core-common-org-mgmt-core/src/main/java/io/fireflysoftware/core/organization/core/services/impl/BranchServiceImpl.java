@@ -15,8 +15,12 @@
  */
 
 
-package io.fireflysoftware.core.organization.core.services;
+package io.fireflysoftware.core.organization.core.services.impl;
 
+import io.fireflysoftware.core.organization.core.services.BankService;
+import io.fireflysoftware.core.organization.core.services.BranchService;
+
+import io.fireflysoftware.core.organization.core.services.ScopedFilterSupport;
 import org.fireflyframework.core.filters.FilterRequest;
 import org.fireflyframework.core.filters.FilterUtils;
 import org.fireflyframework.core.queries.PaginationResponse;
@@ -57,7 +61,9 @@ public class BranchServiceImpl implements BranchService {
     public Mono<PaginationResponse<BranchDTO>> filterBranchesForBank(UUID bankId, FilterRequest<BranchDTO> filterRequest) {
         return bankService.getBankById(bankId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Bank not found with ID: " + bankId)))
-                .flatMap(bank -> filterBranches(filterRequest));
+                .flatMap(bank -> ScopedFilterSupport.filter(Branch.class, mapper::toDTO, filterRequest,
+                        (criteria, pageable) -> repository.findPageForBank(bankId, criteria, pageable),
+                        criteria -> repository.countForBank(bankId, criteria)));
     }
 
     @Override

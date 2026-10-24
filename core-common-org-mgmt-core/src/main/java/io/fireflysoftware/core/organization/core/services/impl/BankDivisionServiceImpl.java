@@ -15,7 +15,10 @@
  */
 
 
-package io.fireflysoftware.core.organization.core.services;
+package io.fireflysoftware.core.organization.core.services.impl;
+
+import io.fireflysoftware.core.organization.core.services.BankService;
+import io.fireflysoftware.core.organization.core.services.BankDivisionService;
 
 import org.fireflyframework.core.filters.FilterRequest;
 import org.fireflyframework.core.filters.FilterUtils;
@@ -91,9 +94,9 @@ public class BankDivisionServiceImpl implements BankDivisionService {
     public Mono<BankDivisionDTO> getBankDivisionByIdForBank(UUID bankId, UUID divisionId) {
         return bankService.getBankById(bankId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Bank not found with ID: " + bankId)))
-                .flatMap(bank -> getBankDivisionById(divisionId))
-                .filter(division -> division.getBankId().equals(bankId))
-                .switchIfEmpty(Mono.error(new RuntimeException("Division not found for bank with ID: " + bankId)));
+                .flatMap(bank -> repository.findByIdAndBankId(divisionId, bankId))
+                .switchIfEmpty(Mono.error(new RuntimeException("Division not found for bank with ID: " + bankId)))
+                .map(mapper::toDTO);
     }
 
     @Override

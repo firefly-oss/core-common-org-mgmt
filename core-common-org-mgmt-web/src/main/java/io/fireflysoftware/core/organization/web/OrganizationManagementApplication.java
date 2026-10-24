@@ -37,7 +37,8 @@ import org.springframework.web.reactive.config.EnableWebFlux;
 )
 @EnableWebFlux
 @EnableR2dbcRepositories(
-        basePackages = "io.fireflysoftware.core.organization.models.repositories"
+        basePackages = "io.fireflysoftware.core.organization.models.repositories",
+        entityOperationsRef = "r2dbcEntityTemplate"
 )
 @EnableR2dbcAuditing
 @ConfigurationPropertiesScan

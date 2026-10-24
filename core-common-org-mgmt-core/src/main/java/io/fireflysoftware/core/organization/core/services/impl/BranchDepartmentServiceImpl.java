@@ -15,8 +15,12 @@
  */
 
 
-package io.fireflysoftware.core.organization.core.services;
+package io.fireflysoftware.core.organization.core.services.impl;
 
+import io.fireflysoftware.core.organization.core.services.BranchService;
+import io.fireflysoftware.core.organization.core.services.BranchDepartmentService;
+
+import io.fireflysoftware.core.organization.core.services.ScopedFilterSupport;
 import org.fireflyframework.core.filters.FilterRequest;
 import org.fireflyframework.core.filters.FilterUtils;
 import org.fireflyframework.core.queries.PaginationResponse;
@@ -57,7 +61,9 @@ public class BranchDepartmentServiceImpl implements BranchDepartmentService {
     public Mono<PaginationResponse<BranchDepartmentDTO>> filterBranchDepartmentsForBranch(UUID branchId, FilterRequest<BranchDepartmentDTO> filterRequest) {
         return branchService.getBranchById(branchId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Branch not found with ID: " + branchId)))
-                .flatMap(branch -> filterBranchDepartments(filterRequest));
+                .flatMap(branch -> ScopedFilterSupport.filter(BranchDepartment.class, mapper::toDTO, filterRequest,
+                        (criteria, pageable) -> repository.findPageForBranch(branchId, criteria, pageable),
+                        criteria -> repository.countForBranch(branchId, criteria)));
     }
 
     @Override
@@ -131,8 +137,8 @@ public class BranchDepartmentServiceImpl implements BranchDepartmentService {
     public Mono<BranchDepartmentDTO> getBranchDepartmentByIdForBranch(UUID branchId, UUID departmentId) {
         return branchService.getBranchById(branchId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Branch not found with ID: " + branchId)))
-                .flatMap(branch -> getBranchDepartmentById(departmentId))
-                .filter(department -> department.getBranchId().equals(branchId))
-                .switchIfEmpty(Mono.error(new RuntimeException("Department not found for branch with ID: " + branchId)));
+                .flatMap(branch -> repository.findByIdAndBranchId(departmentId, branchId))
+                .switchIfEmpty(Mono.error(new RuntimeException("Department not found for branch with ID: " + branchId)))
+                .map(mapper::toDTO);
     }
 }

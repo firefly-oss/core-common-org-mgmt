@@ -15,8 +15,12 @@
  */
 
 
-package io.fireflysoftware.core.organization.core.services;
+package io.fireflysoftware.core.organization.core.services.impl;
 
+import io.fireflysoftware.core.organization.core.services.BankService;
+import io.fireflysoftware.core.organization.core.services.WorkingCalendarService;
+
+import io.fireflysoftware.core.organization.core.services.ScopedFilterSupport;
 import org.fireflyframework.core.filters.FilterRequest;
 import org.fireflyframework.core.filters.FilterUtils;
 import org.fireflyframework.core.queries.PaginationResponse;
@@ -57,7 +61,9 @@ public class WorkingCalendarServiceImpl implements WorkingCalendarService {
     public Mono<PaginationResponse<WorkingCalendarDTO>> filterWorkingCalendarsForBank(UUID bankId, FilterRequest<WorkingCalendarDTO> filterRequest) {
         return bankService.getBankById(bankId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Bank not found with ID: " + bankId)))
-                .flatMap(bank -> filterWorkingCalendars(filterRequest));
+                .flatMap(bank -> ScopedFilterSupport.filter(WorkingCalendar.class, mapper::toDTO, filterRequest,
+                        (criteria, pageable) -> repository.findPageForBank(bankId, criteria, pageable),
+                        criteria -> repository.countForBank(bankId, criteria)));
     }
 
     @Override
@@ -131,8 +137,8 @@ public class WorkingCalendarServiceImpl implements WorkingCalendarService {
     public Mono<WorkingCalendarDTO> getWorkingCalendarByIdForBank(UUID bankId, UUID calendarId) {
         return bankService.getBankById(bankId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Bank not found with ID: " + bankId)))
-                .flatMap(bank -> getWorkingCalendarById(calendarId))
-                .filter(calendar -> calendar.getBankId().equals(bankId))
-                .switchIfEmpty(Mono.error(new RuntimeException("Calendar not found for bank with ID: " + bankId)));
+                .flatMap(bank -> repository.findByIdAndBankId(calendarId, bankId))
+                .switchIfEmpty(Mono.error(new RuntimeException("Calendar not found for bank with ID: " + bankId)))
+                .map(mapper::toDTO);
     }
 }
